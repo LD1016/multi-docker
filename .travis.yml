@@ -1,16 +1,21 @@
 sudo: required
 language: generic
+# specify docker as a dependency
 services:
   - docker
 
+# Build test version of React project with specific file Dockerfile.dev
+# Also can add test for other project
 before_install:
   - docker build -t dex1/react-test -f ./client/Dockerfile.dev ./client
   # can add more test here
 
+# run tests
 script:
-  - docker run CI=true dex1/react-test npm test -- --coverage
+  - docker run -e CI=true dex1/react-test npm test -- --coverage
   # can add more script to run test here
 
+# buld prod versions of all projects
 after_success:
   - docker build -t dex1/multi-client ./client
   - docker build -t dex1/multi-nginx ./nginx
